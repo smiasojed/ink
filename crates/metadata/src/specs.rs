@@ -64,6 +64,7 @@ where
     /// The language specific error type.
     lang_error: TypeSpec<F>,
     /// The environment types of the contract specification.
+    #[serde(default)]
     environment: EnvironmentSpec<F>,
 }
 
@@ -313,6 +314,7 @@ pub struct ConstructorSpec<F: Form = MetaForm> {
     /// The deployment handler documentation.
     pub docs: Vec<F::String>,
     /// If the constructor is the default for off-chain consumers (e.g UIs).
+    #[serde(default)]
     default: bool,
 }
 
@@ -555,6 +557,7 @@ pub struct MessageSpec<F: Form = MetaForm> {
     /// The message documentation.
     docs: Vec<F::String>,
     /// If the message is the default for off-chain consumers (e.g UIs).
+    #[serde(default)]
     default: bool,
 }
 
