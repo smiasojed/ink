@@ -47,7 +47,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        uses: ${GITHUB_WORKSPACE}/.github/rust-info
+        uses: ./.github/rust-info
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -171,39 +171,39 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - name: Rust Info
-      uses: ${HOME}/.github/rust-info
+      - name: Rust Info
+        uses: ./.github/rust-info
 
-    - name: Cache
-      uses: Swatinem/rust-cache@v2
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 100
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
 
-    - name: Check
-      run: |
-        ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
-        for crate in ${ALL_CRATES}; do
-          cargo check --verbose --all-features --manifest-path ./crates/${crate}/Cargo.toml;
-        done
+      - name: Check
+        run: |
+          ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
+          for crate in ${ALL_CRATES}; do
+            cargo check --verbose --all-features --manifest-path ./crates/${crate}/Cargo.toml;
+          done
 
-    - name: Check WASM
-      run: |
-        for crate in ${ALSO_WASM_CRATES}; do
-          cargo check --verbose --no-default-features --target wasm32-unknown-unknown \
-          --manifest-path ./crates/${crate}/Cargo.toml;
-        done        
+      - name: Check WASM
+        run: |
+          for crate in ${ALSO_WASM_CRATES}; do
+            cargo check --verbose --no-default-features --target wasm32-unknown-unknown \
+            --manifest-path ./crates/${crate}/Cargo.toml;
+          done        
 
-    - name: Check RISCV
-      env:
-        RUSTC_BOOTSTRAP:               "1"
-      run: |
-        for crate in ${ALSO_WASM_CRATES}; do
-          cargo check --verbose --no-default-features --target $RISCV_TARGET -Zbuild-std="core,alloc" \
-          --manifest-path ./crates/${crate}/Cargo.toml;
-        done       
+      - name: Check RISCV
+        env:
+          RUSTC_BOOTSTRAP:               "1"
+        run: |
+          for crate in ${ALSO_WASM_CRATES}; do
+            cargo check --verbose --no-default-features --target $RISCV_TARGET -Zbuild-std="core,alloc" \
+            --manifest-path ./crates/${crate}/Cargo.toml;
+          done       
 
   dylint:
     runs-on: ubuntu-latest
@@ -215,26 +215,26 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - name: Rust Info
-      uses: ./.github/rust-info
+      - name: Rust Info
+        uses: ./.github/rust-info
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 100
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
 
-    - name: Dylint
-      run: |
-        cd linting/
-        # we are using a toolchain file in this directory
-        # add required components for CI
-        rustup component add rustfmt clippy
-        cargo check --verbose
-        cargo +nightly fmt --verbose --all -- --check
-        cargo clippy --verbose -- -D warnings;
-        # Needed until https://github.com/mozilla/sccache/issues/1000 is fixed.
-        unset RUSTC_WRAPPER
-        cargo test --verbose --all-features
+      - name: Dylint
+        run: |
+          cd linting/
+          # we are using a toolchain file in this directory
+          # add required components for CI
+          rustup component add rustfmt clippy
+          cargo check --verbose
+          cargo +nightly fmt --verbose --all -- --check
+          cargo clippy --verbose -- -D warnings;
+          # Needed until https://github.com/mozilla/sccache/issues/1000 is fixed.
+          unset RUSTC_WRAPPER
+          cargo test --verbose --all-features
 
   build:
     runs-on: ubuntu-latest
@@ -247,27 +247,27 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-    - name: Rust Info
-      uses: ./.github/rust-info
+      - name: Rust Info
+        uses: ./.github/rust-info
 
-    - name: Cache
-      uses: Swatinem/rust-cache@v2
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
 
-    - name: Checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 100
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
 
-    - name: Build
-      run: |
-        ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
-        for crate in ${ALL_CRATES}; do
-          cargo build --verbose --all-features --release --manifest-path ./crates/${crate}/Cargo.toml;
-        done
+      - name: Build
+        run: |
+          ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
+          for crate in ${ALL_CRATES}; do
+            cargo build --verbose --all-features --release --manifest-path ./crates/${crate}/Cargo.toml;
+          done
 
-    - name: Build WASM
-      run: |
-        for crate in ${ALSO_WASM_CRATES}; do
-          cargo build --verbose --no-default-features --release --target wasm32-unknown-unknown \
-          --manifest-path ./crates/${crate}/Cargo.toml;
-        done
+      - name: Build WASM
+        run: |
+          for crate in ${ALSO_WASM_CRATES}; do
+            cargo build --verbose --no-default-features --release --target wasm32-unknown-unknown \
+            --manifest-path ./crates/${crate}/Cargo.toml;
+          done
