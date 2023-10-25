@@ -47,13 +47,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        run: |
-          rustup show
-          cargo --version
-          rustup +nightly show
-          cargo +nightly --version
-          cargo spellcheck --version
-          bash --version
+        uses: ./.github/rust-info
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -76,13 +70,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        run: |
-          rustup show
-          cargo --version
-          rustup +nightly show
-          cargo +nightly --version
-          cargo spellcheck --version
-          bash --version
+        uses: ./.github/rust-info
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -114,13 +102,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        run: |
-          rustup show
-          cargo --version
-          rustup +nightly show
-          cargo +nightly --version
-          cargo spellcheck --version
-          bash --version
+        uses: ./.github/rust-info
 
       - name: Cache
         uses: Swatinem/rust-cache@v2
@@ -164,13 +146,7 @@ jobs:
             parameters: "--no-default-features --target wasm32-unknown-unknown"
     steps:
       - name: Rust Info
-        run: |
-          rustup show
-          cargo --version
-          rustup +nightly show
-          cargo +nightly --version
-          cargo spellcheck --version
-          bash --version
+        uses: ./.github/rust-info
 
       - name: Cache
         uses: Swatinem/rust-cache@v2
@@ -196,13 +172,7 @@ jobs:
       fail-fast: false
     steps:
     - name: Rust Info
-      run: |
-        rustup show
-        cargo --version
-        rustup +nightly show
-        cargo +nightly --version
-        cargo spellcheck --version
-        bash --version
+      uses: ./.github/rust-info
 
     - name: Cache
       uses: Swatinem/rust-cache@v2
@@ -246,13 +216,7 @@ jobs:
       fail-fast: false
     steps:
     - name: Rust Info
-      run: |
-        rustup show
-        cargo --version
-        rustup +nightly show
-        cargo +nightly --version
-        cargo spellcheck --version
-        bash --version
+      uses: ./.github/rust-info
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -284,13 +248,7 @@ jobs:
       fail-fast: false
     steps:
     - name: Rust Info
-      run: |
-        rustup show
-        cargo --version
-        rustup +nightly show
-        cargo +nightly --version
-        cargo spellcheck --version
-        bash --version
+      uses: ./.github/rust-info
 
     - name: Cache
       uses: Swatinem/rust-cache@v2
