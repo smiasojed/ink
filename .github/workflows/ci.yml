@@ -69,13 +69,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: Rust Info
-        uses: ./.github/rust-info
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
+
+      - name: Rust Info
+        uses: ./.github/rust-info
 
       - name: Check Formatting
         run: |
@@ -101,9 +101,6 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: Rust Info
-        run: ${GITHUB_ACTION_PATH}/ru.sh
-
       - name: Cache
         uses: Swatinem/rust-cache@v2
 
@@ -111,7 +108,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
-    
+
+      - name: Rust Info
+        uses: ./.github/rust-info
+
       - name: Run Clippy
         run: |
           ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
@@ -145,9 +145,6 @@ jobs:
           - name: "Wasm Examples"
             parameters: "--no-default-features --target wasm32-unknown-unknown"
     steps:
-      - name: Rust Info
-        uses: ./.github/rust-info
-
       - name: Cache
         uses: Swatinem/rust-cache@v2
 
@@ -155,6 +152,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
+
+      - name: Rust Info
+        uses: ./.github/rust-info
 
       - name: Run Clippy for ${{ matrix.name }}
         run: |
@@ -171,9 +171,6 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: Rust Info
-        uses: ./.github/rust-info
-
       - name: Cache
         uses: Swatinem/rust-cache@v2
 
@@ -181,6 +178,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
+
+      - name: Rust Info
+        uses: ./.github/rust-info
 
       - name: Check
         run: |
@@ -215,13 +215,13 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: Rust Info
-        uses: ./.github/rust-info
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
+
+      - name: Rust Info
+        uses: ./.github/rust-info
 
       - name: Dylint
         run: |
@@ -247,9 +247,6 @@ jobs:
     strategy:
       fail-fast: false
     steps:
-      - name: Rust Info
-        uses: ./.github/rust-info
-
       - name: Cache
         uses: Swatinem/rust-cache@v2
 
@@ -257,6 +254,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
+
+      - name: Rust Info
+        uses: ./.github/rust-info
 
       - name: Build
         run: |
