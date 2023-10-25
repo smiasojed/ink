@@ -47,7 +47,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        uses: ./.github/rust-info
+        uses: ${{ vars.GITHUB_WORKSPACE }}/.github/rust-info
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        uses: ./.github/rust-info
+        uses: ${{ github.workspace }}/.github/rust-info
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -102,7 +102,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Rust Info
-        uses: ./.github/rust-info
+        uses: /__w/ink/ink/.github/rust-info
 
       - name: Cache
         uses: Swatinem/rust-cache@v2
@@ -146,7 +146,7 @@ jobs:
             parameters: "--no-default-features --target wasm32-unknown-unknown"
     steps:
       - name: Rust Info
-        uses: ./.github/rust-info
+        uses: ${{ env.HOME }}/.github/rust-info
 
       - name: Cache
         uses: Swatinem/rust-cache@v2
@@ -172,7 +172,7 @@ jobs:
       fail-fast: false
     steps:
     - name: Rust Info
-      uses: ./.github/rust-info
+      uses: ${HOME}/.github/rust-info
 
     - name: Cache
       uses: Swatinem/rust-cache@v2
