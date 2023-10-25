@@ -140,9 +140,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: "Examples"
-            parameters: "--all-targets"
-          - name: "Wasm Examples"
+          - name: Examples
+            parameters: --all-targets
+          - name: Wasm Examples
             parameters: "--no-default-features --target wasm32-unknown-unknown"
     steps:
       - name: Cache
