@@ -139,10 +139,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Examples
+          - type: STD
             parameters: --all-targets
-          - name: Wasm Examples
-            parameters: "--no-default-features --target wasm32-unknown-unknown"
+          - type: WASM
+            parameters: --no-default-features --target wasm32-unknown-unknown
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -157,7 +157,7 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      - name: Run Clippy for ${{ matrix.name }}
+      - name: Run Clippy for ${{ matrix.type }} Examples
         run: |
           scripts/for_all_contracts_exec.sh --path integration-tests -- cargo clippy --verbose ${{ matrix.parameters}} \
           --manifest-path {} -- -D warnings -A $CLIPPY_ALLOWED
@@ -171,6 +171,8 @@ jobs:
       image: paritytech/ci-unified:bullseye-1.73.0
     strategy:
       fail-fast: false
+      matrix:
+        type: [STD, WASM, RISCV]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -185,21 +187,24 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      - name: Check
+      - name: Check ${{ matrix.type }}
+        if: ${{ matrix.type == 'STD' }}
         run: |
           ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
           for crate in ${ALL_CRATES}; do
             cargo check --verbose --all-features --manifest-path ./crates/${crate}/Cargo.toml;
           done
 
-      - name: Check WASM
+      - name: Check ${{ matrix.type }}
+        if: ${{ matrix.type == 'WASM' }}
         run: |
           for crate in ${ALSO_WASM_CRATES}; do
             cargo check --verbose --no-default-features --target wasm32-unknown-unknown \
             --manifest-path ./crates/${crate}/Cargo.toml;
           done        
 
-      - name: Check RISCV
+      - name: Check ${{ matrix.type }}
+        if: ${{ matrix.type == 'RISCV' }}
         env:
           RUSTC_BOOTSTRAP:               "1"
         run: |
