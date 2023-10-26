@@ -495,6 +495,9 @@ jobs:
       image: paritytech/ci-unified:bullseye-1.73.0
     strategy:
       fail-fast: false
+      matrix:
+        include:
+          - type: [WASM, RISCV]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -510,6 +513,7 @@ jobs:
         uses: ./.github/rust-info
 
       - name: Build Contract WASM Examples
+        if: ${{ matrix.type == 'WASM' }}
         run: |
           rustup component add rust-src --toolchain stable
           cargo contract -V
@@ -523,6 +527,7 @@ jobs:
           popd
 
       - name: Build Contract RISCV Examples
+        if: ${{ matrix.type == 'WASM' }}
         env:
           RUSTC_BOOTSTRAP:               1
         run: |
