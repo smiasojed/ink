@@ -16,21 +16,21 @@ on:
       - 'FILE_HEADER'
 
 env:
-  CARGO_TARGET_DIR:                "/ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}"
+  CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
   CARGO_INCREMENTAL:               0
-  PURELY_STD_CRATES:               "ink/codegen metadata engine e2e e2e/macro ink/ir"
-  ALSO_WASM_CRATES:                "env storage storage/traits allocator prelude primitives ink ink/macro"
+  PURELY_STD_CRATES:               ink/codegen metadata engine e2e e2e/macro ink/ir
+  ALSO_WASM_CRATES:                env storage storage/traits allocator prelude primitives ink ink/macro
   # TODO `cargo clippy --verbose --all-targets --all-features` for this crate
   # currently fails on `stable`, but succeeds on `nightly`. This is due to
   # this fix not yet in stable: https://github.com/rust-lang/rust-clippy/issues/8895.
   # Remove the following line again as soon as `clippy` on stable succeeds again.
-  CLIPPY_ALLOWED:                  "clippy::extra_unused_lifetimes"
+  CLIPPY_ALLOWED:                  clippy::extra_unused_lifetimes
   # We plan to fully support RISC-V as a bytecode for contracts soon.
   # RISC-V does not have a standard library in contrast to Wasm. Compiling against
   # this target also makes sure that we don't pull in `std` by accident (through dependencies).
   # RISC-V is a modular archtitecture. We might switch to a different flavor with more features
   # later. For example, `riscv32imc-unknown-none-elf`.
-  RISCV_TARGET:                    "riscv32i-unknown-none-elf"
+  RISCV_TARGET:                    riscv32i-unknown-none-elf
 
 jobs:
   spellcheck:
@@ -211,7 +211,7 @@ jobs:
       - name: Check RISCV
         if: ${{ matrix.type == 'RISCV' }}
         env:
-          RUSTC_BOOTSTRAP:               "1"
+          RUSTC_BOOTSTRAP:               1
         run: |
           for crate in ${ALSO_WASM_CRATES}; do
             cargo check --verbose --no-default-features --target $RISCV_TARGET -Zbuild-std="core,alloc" \
@@ -314,7 +314,7 @@ jobs:
       - name: Test
         env:
           # Fix for linking of `linkme` for `cargo test`: https://github.com/dtolnay/linkme/issues/49
-          RUSTFLAGS: "-Clink-arg=-z -Clink-arg=nostart-stop-gc"
+          RUSTFLAGS: -Clink-arg=-z -Clink-arg=nostart-stop-gc
           # Since we run the tests with `--all-features` this implies the feature
           # `ink-fuzz-tests` as well -- i.e. the fuzz tests are run.
           # There's no way to disable a single feature while enabling all features
@@ -323,6 +323,61 @@ jobs:
         run: |
           cargo test --verbose --all-features --no-fail-fast --workspace
           cargo test --verbose --all-features --no-fail-fast --workspace --doc
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: [check, fmt, clippy, clippy-examples, dylint, spellcheck]
+    defaults:
+      run:
+        shell: bash
+    container:
+      image: paritytech/ci-unified:bullseye-1.73.0
+    strategy:
+      fail-fast: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 100
+
+      - name: Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          cache-directories: ${{ env.CARGO_TARGET_DIR }}
+
+      - name: Rust Info
+        uses: ./.github/rust-info
+
+      - name: Create docs
+        env:
+          RUSTDOCFLAGS: -Dwarnings
+        run: |
+          # All crate docs currently need to be built separately. The reason
+          # is that `smart-bench-macro` is a dependency now in a number of places.
+          # This crate uses e.g. `ink_metadata`, but in its published form. So if
+          # e.g. the `-p ink_metadata` is added to the `ink_lang` command  this
+          # results in the cargo failure "multiple packages with same spec, ambiguous".
+          cargo doc --no-deps --all-features -p ink_env
+          cargo doc --no-deps --all-features -p ink_storage
+          cargo doc --no-deps --all-features -p ink_storage_traits
+          cargo doc --no-deps --all-features -p ink_primitives
+          cargo doc --no-deps --all-features -p ink_prelude
+          cargo doc --no-deps --all-features -p ink
+          cargo doc --no-deps --all-features -p ink_macro
+          cargo doc --no-deps --all-features -p ink_ir
+          cargo doc --no-deps --all-features -p ink_codegen
+          cargo doc --no-deps --all-features -p ink_metadata
+          cargo doc --no-deps --all-features -p ink_e2e
+          cargo doc --no-deps --all-features -p ink_e2e_macro
+          mv ${CARGO_TARGET_DIR}/doc ./crate-docs
+          # FIXME: remove me after CI image gets nonroot
+          chown -R nonroot:nonroot ./crate-docs
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.job }}_${{ github.ref_name }}-doc
+          path: ./crate-docs
+          retention-days: 7
 
   codecov:
     runs-on: ubuntu-latest
@@ -352,14 +407,14 @@ jobs:
         env:
           # For codecov it's sufficient to run the fuzz tests only once.
           QUICKCHECK_TESTS:              1
-          INK_COVERAGE_REPORTING:        "true"
+          INK_COVERAGE_REPORTING:        true
           CARGO_INCREMENTAL:             0
           # Needed because `codecov` requires nightly features to work
           # (see `-Z` in the `RUSTFLAGS` below).
-          RUSTC_BOOTSTRAP:               "1"
+          RUSTC_BOOTSTRAP:               1
           # Variables partly came from https://github.com/mozilla/grcov/blob/master/README.md
-          RUSTFLAGS:                     "-Zprofile -Zmir-opt-level=0 -Ccodegen-units=1
-                                          -Clink-dead-code -Copt-level=0 -Coverflow-checks=off"
+          RUSTFLAGS:                     -Zprofile -Zmir-opt-level=0 -Ccodegen-units=1 \
+                                          -Clink-dead-code -Copt-level=0 -Coverflow-checks=off
           # The `cargo-taurpalin` coverage reporting tool seems to have better code instrumentation and thus
           # produces better results for Rust codebases in general. However, unlike `grcov` it requires
           # running docker with `--security-opt seccomp=unconfined` which is why we use `grcov` instead.
@@ -381,10 +436,6 @@ jobs:
           rust-covfix lcov-w-branch.info --output lcov-w-branch-fixed.info
           # TODO: Enable when Gitlab CI is disabled
           #codecov --token "$CODECOV_P_TOKEN" --file lcov-w-branch-fixed.info --nonZero
-
-          codecov --token "$CODECOV_TOKEN" --file lcov-lines-fixed.info --nonZero
-
-
           # lines coverage
           grcov . --binary-path ./target/debug/ --source-dir . --output-type lcov --llvm \
               --ignore-not-existing --ignore "/*" --ignore "tests/*" --output-path lcov-lines.info
