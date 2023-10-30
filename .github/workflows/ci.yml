@@ -2,6 +2,13 @@ name: continuous-integration
 
 on:
   pull_request:
+    paths-ignore:
+      - '**/*.md'
+      - '.gitlab-ci.yml'
+      - 'CODEOWNERS'
+      - 'LICENSE'
+      - 'CODE_OF_CONDUCT.adoc'
+      - 'FILE_HEADER'
   push:
     branches:
       - master
@@ -17,7 +24,6 @@ on:
       - 'FILE_HEADER'
 
 env:
-  IMAGE:                           paritytech/ci-unified:bullseye-1.73.0
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
   CARGO_INCREMENTAL:               0
   PURELY_STD_CRATES:               ink/codegen metadata engine e2e e2e/macro ink/ir
@@ -43,7 +49,7 @@ jobs:
       run:
         shell: bash
     container:
-      image: ${{ env.IMAGE }}
+      image: paritytech/ci-unified:bullseye-1.73.0
     strategy:
       fail-fast: false
     steps:
