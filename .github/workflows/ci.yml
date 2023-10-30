@@ -17,6 +17,7 @@ on:
       - 'FILE_HEADER'
 
 env:
+  IMAGE:                           paritytech/ci-unified:bullseye-1.73.0
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
   CARGO_INCREMENTAL:               0
   PURELY_STD_CRATES:               ink/codegen metadata engine e2e e2e/macro ink/ir
@@ -42,7 +43,7 @@ jobs:
       run:
         shell: bash
     container:
-      image: paritytech/ci-unified:bullseye-1.73.0
+      image: ${{ env.IMAGE }}
     strategy:
       fail-fast: false
     steps:
@@ -142,8 +143,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - type: [STD, WASM]
+        type: [STD, WASM]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -264,6 +264,8 @@ jobs:
       image: paritytech/ci-unified:bullseye-1.73.0
     strategy:
       fail-fast: false
+      matrix:
+        type: [STD, WASM]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -279,6 +281,7 @@ jobs:
         uses: ./.github/rust-info
 
       - name: Build
+        if: ${{ matrix.type == 'STD' }}
         run: |
           ALL_CRATES="${PURELY_STD_CRATES} ${ALSO_WASM_CRATES}"
           for crate in ${ALL_CRATES}; do
@@ -286,6 +289,7 @@ jobs:
           done
 
       - name: Build WASM
+        if: ${{ matrix.type == 'WASM' }}
         run: |
           for crate in ${ALSO_WASM_CRATES}; do
             cargo build --verbose --no-default-features --release --target wasm32-unknown-unknown \
@@ -380,7 +384,7 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}_${{ github.ref_name }}-doc
+          name: ${{ github.job }}_${{ github.sha }}-doc
           path: ./crate-docs
           retention-days: 7
 
@@ -497,8 +501,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - type: [WASM, RISCV]
+        type: [WASM, RISCV]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
