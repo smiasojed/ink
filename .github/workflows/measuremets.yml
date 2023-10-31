@@ -2,8 +2,8 @@ name: continuous-intergration/measurements
 
 on:
   push:
-    branches-ignore:
-      - master
+    # branches-ignore:
+    #   - master
     paths-ignore:
       - '**/*.md'
       - '.gitlab-ci.yml'
@@ -22,8 +22,8 @@ env:
 
 jobs:
   contract-sizes:
-   # if: ${{ github.event.workflow_run.conclusion == 'success' }}
-   # if: ${{ github.event_name == 'push' }} && ${{ github.ref_name != 'master' }}
+    # For pull requests, 'github.ref_name' is in the format '438/merge', while for pushes, it contains the branch name.
+   # if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ github.ref_name != 'master' }}
     runs-on: ubuntu-latest
     defaults:
       run:
