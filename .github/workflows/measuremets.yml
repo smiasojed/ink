@@ -42,7 +42,7 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      - name: Set Variables
+      - name: Measure Contract Sizes
         run: |
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
@@ -57,13 +57,6 @@ jobs:
           PR_COMMENTS_URL="https://api.github.com/repos/smiasojed/ink/issues/${GITHUB_REF_NAME}/comments"
           WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
-          echo $PR_BRANCH_CONTRACT_SIZES
-          echo $CONTRACT_SIZES_DIFF
-          echo $PR_COMMENTS_URL
-
-
-      - name: Measure Contract Sizes
-        run: |
           # Measure contract sizes for the current branch
           scripts/for_all_contracts_exec.sh --path integration-tests --quiet -- scripts/contract_size.sh {} \ 
             > $PR_BRANCH_CONTRACT_SIZES 
@@ -76,8 +69,6 @@ jobs:
           sed -ie 's/^integration-tests\///g' ${UPSTREAM_CONTRACT_SIZES}
           popd
 
-      - name: Build Table
-        run: |
           # Build the comparison table
           {}/contract_sizes_diff.sh ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES} > ${CONTRACT_SIZES_DIFF}
           cat ${CONTRACT_SIZES_DIFF}
