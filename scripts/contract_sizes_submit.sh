@@ -52,7 +52,6 @@ ${diffs_markdown_table}
 [Link to the run](${workflow_url}) | Last update: ${updated}
 EOF
 )
-# https://github.com/paritytech/ink/actions/runs/6691117998
 json_body=$(jq -n --arg body "${body}" '{ "body": $body}')
 
 curl -X ${verb} ${pr_comments_url} \

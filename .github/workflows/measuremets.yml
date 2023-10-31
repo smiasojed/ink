@@ -53,7 +53,8 @@ jobs:
           UPSTREAM_REPO="https://github.com/paritytech/ink.git"
           UPSTREAM_DIR="${MEASUREMENTS_DIR}/ink-${UPSTREAM_BRANCH}"
           CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${CI_COMMIT_BRANCH}_contract_sizes_diff.md"
-          PR_COMMENTS_URL="https://api.github.com/repos/paritytech/ink/issues/${CI_COMMIT_REF_NAME}/comments"
+          # TODO: fix
+          PR_COMMENTS_URL="https://api.github.com/repos/smiasojed/ink/issues/${CI_COMMIT_REF_NAME}/comments"
           WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
       - name: Measure Contract Sizes
