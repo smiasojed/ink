@@ -57,6 +57,11 @@ jobs:
           PR_COMMENTS_URL="https://api.github.com/repos/smiasojed/ink/issues/${GITHUB_REF_NAME}/comments"
           WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
+          echo $PR_BRANCH_CONTRACT_SIZES
+          echo $CONTRACT_SIZES_DIFF
+          echo $PR_COMMENTS_URL
+
+
       - name: Measure Contract Sizes
         run: |
           # Measure contract sizes for the current branch
