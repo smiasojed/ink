@@ -2,8 +2,8 @@ name: continuous-intergration/measurements
 
 on:
   push:
-    # branches-ignore:
-    #   - master
+    branches-ignore:
+      - master
     paths-ignore:
       - '**/*.md'
       - '.gitlab-ci.yml'
@@ -11,13 +11,19 @@ on:
       - 'LICENSE'
       - 'CODE_OF_CONDUCT.adoc'
       - 'FILE_HEADER'
+# on:
+#   workflow_run:
+#     workflows: [continuous-integration]
+#     types:
+#       - completed
 
 env:
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
 
 jobs:
   contract-sizes:
-    if: ${{ github.event_name == 'push' }} && ${{ github.ref_name != 'master' }}
+   # if: ${{ github.event.workflow_run.conclusion == 'success' }}
+   # if: ${{ github.event_name == 'push' }} && ${{ github.ref_name != 'master' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -71,7 +77,7 @@ jobs:
           popd
 
           # Build the comparison table
-          {}/contract_sizes_diff.sh ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES} > ${CONTRACT_SIZES_DIFF}
+          ${SCRIPTS_DIR}/contract_sizes_diff.sh ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES} > ${CONTRACT_SIZES_DIFF}
           cat ${CONTRACT_SIZES_DIFF}
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
