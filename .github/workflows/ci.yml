@@ -2,13 +2,17 @@ name: continuous-integration
 
 on:
   pull_request:
-    # paths-ignore:
-      # - '**/*.md'
-      # - '.gitlab-ci.yml'
-      # - 'CODEOWNERS'
-      # - 'LICENSE'
-      # - 'CODE_OF_CONDUCT.adoc'
-      # - 'FILE_HEADER'
+    types:
+      - opened
+      - reopened
+      - synchronize
+    paths-ignore:
+      - '**/*.md'
+      - '.gitlab-ci.yml'
+      - 'CODEOWNERS'
+      - 'LICENSE'
+      - 'CODE_OF_CONDUCT.adoc'
+      - 'FILE_HEADER'
   push:
     branches:
       - master
@@ -51,8 +55,8 @@ jobs:
     outputs:
       IMAGE: ${{ steps.set_image.outputs.IMAGE }}
     steps:
-    - id: set_image
-      run: echo "IMAGE=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
+      - id: set_image
+        run: echo "IMAGE=${{ env.IMAGE }}" >> $GITHUB_OUTPUT
 
   spellcheck:
     runs-on: ubuntu-latest
@@ -589,3 +593,8 @@ jobs:
           # of this flag.
           scripts/for_all_contracts_exec.sh --path integration-tests -- cargo doc --manifest-path {} \
             --document-private-items --verbose --no-deps
+
+# measurements
+
+  measurements:
+    uses: ./.github/workflows/measurements.yml

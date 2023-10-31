@@ -1,18 +1,20 @@
 name: continuous-intergration/measurements
 
+# on:
+#   workflow_run:
+#     workflows: [continuous-integration]
+#     types:
+#       #- completed
+#       - in_progress
 on:
-  workflow_run:
-    workflows: [continuous-integration]
-    types:
-      #- completed
-      - in_progress
+  workflow_call:
 
 env:
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
 
 jobs:
   contract-sizes:
-    if: ${{ github.event.workflow_run.event == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' }}
    # if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ github.event.workflow_run.event == 'pull_request' }}
     runs-on: ubuntu-latest
     defaults:
@@ -38,15 +40,14 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      - name: Dump
-        run: |
-          echo ${{ github.event.workflow_run.head_branch }}
-          echo ${{ github.event.workflow_run.pull_requests.number }}
-          echo '${{ toJSON(github) }}'
+      # - name: Dump
+      #   run: echo '${{ toJSON(github) }}'
+
       - name: Measure Contract Sizes
         env:
-          PR_BRANCH:               ${{ github.event.workflow_run.head_branch }}
-          PR_NUMBER:               ${{ github.event.workflow_run.pull_requests.number }}
+          PR_BRANCH:               ${{ github.head_ref }}
+          PR_NUMBER:               ${{ github.event.number }}
+          GITHUB_PR_TOKEN:         ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
@@ -57,8 +58,8 @@ jobs:
           UPSTREAM_REPO="https://github.com/paritytech/ink.git"
           UPSTREAM_DIR="${MEASUREMENTS_DIR}/ink-${UPSTREAM_BRANCH}"
           CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes_diff.md"
-          # TODO: fix
-          PR_COMMENTS_URL="https://api.github.com/repos/smiasojed/ink/issues/${PR_NUMBER}/comments"
+          PR_COMMENTS_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
+          WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
           # Measure contract sizes for the current branch
           mkdir ${MEASUREMENTS_DIR}
@@ -78,6 +79,6 @@ jobs:
           cat ${CONTRACT_SIZES_DIFF}
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${{ secrets.GITHUB_TOKEN }} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} \
-            ${{ github.event.workflow_run.workflow_url }} < ${CONTRACT_SIZES_DIFF}
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} \
+            ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
           rm -rf ${MEASUREMENTS_DIR}
