@@ -1,28 +1,20 @@
 name: continuous-intergration/measurements
 
 # on:
-  # push:
-  #   # branches-ignore:
-  #   #   - master
-  #   paths-ignore:
-  #     - '**/*.md'
-  #     - '.gitlab-ci.yml'
-  #     - 'CODEOWNERS'
-  #     - 'LICENSE'
-  #     - 'CODE_OF_CONDUCT.adoc'
-  #     - 'FILE_HEADER'
+#   workflow_run:
+#     workflows: [continuous-integration]
+#     types:
+#       #- completed
+#       - in_progress
 on:
-  workflow_run:
-    workflows: [continuous-integration]
-    types:
-      #- completed
-      - in_progress
+  workflow_call:
 
 env:
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
 
 jobs:
   contract-sizes:
+    if: ${{ github.event_name == 'pull_request' }}
    # if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ github.event.workflow_run.event == 'pull_request' }}
     runs-on: ubuntu-latest
     defaults:
@@ -48,26 +40,25 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      - name: Measure Contract Sizes
-        run: |
-          echo "$GITHUB_CONTEXT"
-          echo '${{ toJSON(github) }}'
+      # - name: Dump
+      #   run: echo '${{ toJSON(github) }}'
 
       - name: Measure Contract Sizes
+        env:
+          PR_BRANCH:               ${{ github.head_ref }}
+          PR_NUMBER:               ${{ github.event.number }}
+          GITHUB_PR_TOKEN:         ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "$GITHUB_CONTEXT"
-
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
           SCRIPTS_DIR="${GITHUB_WORKSPACE}/scripts"
-          PR_BRANCH_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${GITHUB_REF_NAME}_contract_sizes"
+          PR_BRANCH_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes"
           UPSTREAM_BRANCH="master"
           UPSTREAM_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${UPSTREAM_BRANCH}_contract_sizes"
           UPSTREAM_REPO="https://github.com/paritytech/ink.git"
           UPSTREAM_DIR="${MEASUREMENTS_DIR}/ink-${UPSTREAM_BRANCH}"
-          CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${GITHUB_REF_NAME}_contract_sizes_diff.md"
-          # TODO: fix
-          PR_COMMENTS_URL="https://api.github.com/repos/smiasojed/ink/issues/${GITHUB_REF_NAME}/comments"
+          CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes_diff.md"
+          PR_COMMENTS_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
           WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
 
           # Measure contract sizes for the current branch
@@ -88,5 +79,6 @@ jobs:
           cat ${CONTRACT_SIZES_DIFF}
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${{ secrets.GITHUB_TOKEN }} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} \
+            ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
           rm -rf ${MEASUREMENTS_DIR}
