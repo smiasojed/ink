@@ -1,16 +1,5 @@
 name: continuous-intergration/measurements
 
-# on:
-  # push:
-  #   # branches-ignore:
-  #   #   - master
-  #   paths-ignore:
-  #     - '**/*.md'
-  #     - '.gitlab-ci.yml'
-  #     - 'CODEOWNERS'
-  #     - 'LICENSE'
-  #     - 'CODE_OF_CONDUCT.adoc'
-  #     - 'FILE_HEADER'
 on:
   workflow_run:
     workflows: [continuous-integration]
@@ -23,6 +12,7 @@ env:
 
 jobs:
   contract-sizes:
+    if: ${{ github.event.workflow_run.event == 'pull_request' }}
    # if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ github.event.workflow_run.event == 'pull_request' }}
     runs-on: ubuntu-latest
     defaults:
@@ -47,11 +37,6 @@ jobs:
 
       - name: Rust Info
         uses: ./.github/rust-info
-
-      - name: Measure Contract Sizes
-        run: |
-          echo "$GITHUB_CONTEXT"
-          echo '${{ toJSON(github) }}'
 
       - name: Measure Contract Sizes
         env:
