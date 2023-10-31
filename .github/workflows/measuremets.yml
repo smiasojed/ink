@@ -1,29 +1,28 @@
 name: continuous-intergration/measurements
 
-on:
-  push:
-    # branches-ignore:
-    #   - master
-    paths-ignore:
-      - '**/*.md'
-      - '.gitlab-ci.yml'
-      - 'CODEOWNERS'
-      - 'LICENSE'
-      - 'CODE_OF_CONDUCT.adoc'
-      - 'FILE_HEADER'
 # on:
-#   workflow_run:
-#     workflows: [continuous-integration]
-#     types:
-#       - completed
+  # push:
+  #   # branches-ignore:
+  #   #   - master
+  #   paths-ignore:
+  #     - '**/*.md'
+  #     - '.gitlab-ci.yml'
+  #     - 'CODEOWNERS'
+  #     - 'LICENSE'
+  #     - 'CODE_OF_CONDUCT.adoc'
+  #     - 'FILE_HEADER'
+on:
+  workflow_run:
+    workflows: [continuous-integration]
+    types:
+      - completed
 
 env:
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
 
 jobs:
   contract-sizes:
-    # For pull requests, 'github.ref_name' is in the format '438/merge', while for pushes, it contains the branch name.
-   # if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ github.ref_name != 'master' }}
+   # if: ${{ github.event.workflow_run.conclusion == 'success' }} && ${{ github.event.workflow_run.event == 'pull_request' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -50,6 +49,8 @@ jobs:
 
       - name: Measure Contract Sizes
         run: |
+          echo "$GITHUB_CONTEXT"
+
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
           SCRIPTS_DIR="${GITHUB_WORKSPACE}/scripts"
