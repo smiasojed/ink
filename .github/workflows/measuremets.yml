@@ -15,7 +15,8 @@ on:
   workflow_run:
     workflows: [continuous-integration]
     types:
-      - completed
+      #- completed
+      - in_progress
 
 env:
   CARGO_TARGET_DIR:                /ci-cache/${{ github.repository }}/targets/${{ github.ref_name }}/${{ github.job }}
@@ -46,6 +47,11 @@ jobs:
 
       - name: Rust Info
         uses: ./.github/rust-info
+
+      - name: Measure Contract Sizes
+        run: |
+          echo "$GITHUB_CONTEXT"
+          echo '${{ toJSON(github) }}'
 
       - name: Measure Contract Sizes
         run: |
