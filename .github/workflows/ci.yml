@@ -351,7 +351,7 @@ jobs:
       - name: Test
         env:
           # Fix for linking of `linkme` for `cargo test`: https://github.com/dtolnay/linkme/issues/49
-          RUSTFLAGS: -Clink-arg=-z -Clink-arg=nostart-stop-gc
+          RUSTFLAGS:                   -Clink-arg=-z -Clink-arg=nostart-stop-gc
           # Since we run the tests with `--all-features` this implies the feature
           # `ink-fuzz-tests` as well -- i.e. the fuzz tests are run.
           # There's no way to disable a single feature while enabling all features
@@ -387,7 +387,7 @@ jobs:
 
       - name: Create docs
         env:
-          RUSTDOCFLAGS: -Dwarnings
+          RUSTDOCFLAGS:                  -Dwarnings
         run: |
           cargo doc --no-deps --all-features
           mv ${CARGO_TARGET_DIR}/doc ./crate-docs
@@ -491,7 +491,7 @@ jobs:
       - name: Test Examples
         env:
           # Fix linking of `linkme`: https://github.com/dtolnay/linkme/issues/49
-          RUSTFLAGS: -Clink-arg=-z -Clink-arg=nostart-stop-gc
+          RUSTFLAGS:                     -Clink-arg=-z -Clink-arg=nostart-stop-gc
         run: |
           # run all tests with --all-features, which will run the e2e-tests feature if present
           scripts/for_all_contracts_exec.sh --path integration-tests --ignore static-buffer -- cargo test \
@@ -581,7 +581,7 @@ jobs:
 
       - name: Create Examples Docs
         env:
-          RUSTDOCFLAGS: -Dwarnings
+          RUSTDOCFLAGS:                  -Dwarnings
         run: |
           # `--document-private-items` needs to be in here because currently our contract macro
           # puts the contract functions in a private module.
