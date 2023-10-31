@@ -367,23 +367,7 @@ jobs:
         env:
           RUSTDOCFLAGS: -Dwarnings
         run: |
-          # All crate docs currently need to be built separately. The reason
-          # is that `smart-bench-macro` is a dependency now in a number of places.
-          # This crate uses e.g. `ink_metadata`, but in its published form. So if
-          # e.g. the `-p ink_metadata` is added to the `ink_lang` command  this
-          # results in the cargo failure "multiple packages with same spec, ambiguous".
-          cargo doc --no-deps --all-features -p ink_env
-          cargo doc --no-deps --all-features -p ink_storage
-          cargo doc --no-deps --all-features -p ink_storage_traits
-          cargo doc --no-deps --all-features -p ink_primitives
-          cargo doc --no-deps --all-features -p ink_prelude
-          cargo doc --no-deps --all-features -p ink
-          cargo doc --no-deps --all-features -p ink_macro
-          cargo doc --no-deps --all-features -p ink_ir
-          cargo doc --no-deps --all-features -p ink_codegen
-          cargo doc --no-deps --all-features -p ink_metadata
-          cargo doc --no-deps --all-features -p ink_e2e
-          cargo doc --no-deps --all-features -p ink_e2e_macro
+          cargo doc --no-deps --all-features
           mv ${CARGO_TARGET_DIR}/doc ./crate-docs
           # FIXME: remove me after CI image gets nonroot
           chown -R nonroot:nonroot ./crate-docs

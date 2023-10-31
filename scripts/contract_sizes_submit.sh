@@ -11,6 +11,7 @@ set -eu
 set -o pipefail
 
 pr_comments_url=$1
+workflow_url=$2
 diffs_markdown_table=$(</dev/stdin)
 
 # If there is already a comment by the user `paritytech-cicd-pr` in the ink! PR which triggered
@@ -48,10 +49,10 @@ These are the results when building the \`integration-tests/*\` contracts from t
 
 ${diffs_markdown_table}
 
-[Link to the run](https://gitlab.parity.io/parity/mirrors/ink/-/pipelines/${CI_PIPELINE_ID}) | Last update: ${updated}
+[Link to the run](${workflow_url}) | Last update: ${updated}
 EOF
 )
-
+# https://github.com/paritytech/ink/actions/runs/6691117998
 json_body=$(jq -n --arg body "${body}" '{ "body": $body}')
 
 curl -X ${verb} ${pr_comments_url} \
