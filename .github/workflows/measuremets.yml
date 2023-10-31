@@ -38,10 +38,15 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
+      - name: Dump
+        run: |
+          echo ${{ github.event.workflow_run.head_branch }}
+          echo ${{ github.event.workflow_run.pull_requests.number }}
+          echo '${{ toJSON(github) }}'
       - name: Measure Contract Sizes
         env:
-          PR_BRANCH: ${{ github.event.workflow_run.head_branch }}
-          PR_NUMBER: ${{ github.event.workflow_run.pull_requests.number }}
+          PR_BRANCH:               ${{ github.event.workflow_run.head_branch }}
+          PR_NUMBER:               ${{ github.event.workflow_run.pull_requests.number }}
         run: |
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
