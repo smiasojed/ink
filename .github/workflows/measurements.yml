@@ -33,8 +33,8 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      # - name: Dump
-      #   run: echo '${{ toJSON(github) }}'
+      - name: Dump
+        run: echo '${{ toJSON(github) }}'
 
       - name: Measure Contract Sizes
         env:
@@ -56,13 +56,19 @@ jobs:
 
           # Measure contract sizes for the current branch
           mkdir ${MEASUREMENTS_DIR}
+          echo "sss1"
+          ls
           ${SCRIPTS_DIR}/for_all_contracts_exec.sh --path integration-tests --quiet -- ${SCRIPTS_DIR}/contract_size.sh {} \ 
             > ${PR_BRANCH_CONTRACT_SIZES}
           sed -ie 's/^integration-tests\///g' ${PR_BRANCH_CONTRACT_SIZES}
           cat ${PR_BRANCH_CONTRACT_SIZES}
           # Measure contract sizes for the upstream branch
           git clone --verbose --depth 1 --branch ${UPSTREAM_BRANCH} ${UPSTREAM_REPO} ${UPSTREAM_DIR}
+          echo "sss2"
+          ls
           pushd ${UPSTREAM_DIR}
+          echo "sss3"
+          ls
           ${SCRIPTS_DIR}/for_all_contracts_exec.sh --path integration-tests --quiet -- ${SCRIPTS_DIR}/contract_size.sh {} \
             > ${UPSTREAM_CONTRACT_SIZES}
           sed -ie 's/^integration-tests\///g' ${UPSTREAM_CONTRACT_SIZES}
