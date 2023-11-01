@@ -71,5 +71,5 @@ jobs:
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
           echo "Workflow: ${WORKFLOW_URL}"
-          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} '${WORKFLOW_URL}' < ${CONTRACT_SIZES_DIFF}
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} < ${CONTRACT_SIZES_DIFF}
           rm -rf ${MEASUREMENTS_DIR}
