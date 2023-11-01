@@ -122,8 +122,6 @@ jobs:
     needs: [set-image]
     container:
       image: ${{ needs.set-image.outputs.IMAGE }}
-    permissions:
-      checks: write
     strategy:
       fail-fast: false
     steps:
@@ -163,8 +161,6 @@ jobs:
     needs: [set-image]
     container:
       image: ${{ needs.set-image.outputs.IMAGE }}
-    permissions:
-      checks: write
     strategy:
       fail-fast: false
       matrix:
@@ -600,3 +596,10 @@ jobs:
     permissions:
       issues: write
     uses: ./.github/workflows/measurements.yml
+
+# publish
+
+  publish:
+    permissions:
+      contents: write
+    uses: ./.github/workflows/publish.yml
