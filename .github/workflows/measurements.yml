@@ -56,21 +56,13 @@ jobs:
 
           # Measure contract sizes for the current branch
           mkdir ${MEASUREMENTS_DIR}
-          echo "sss1"
-          ls
           ${SCRIPTS_DIR}/for_all_contracts_exec.sh --path integration-tests --quiet -- ${SCRIPTS_DIR}/contract_size.sh {} > ${PR_BRANCH_CONTRACT_SIZES}
           sed -ie 's/^integration-tests\///g' ${PR_BRANCH_CONTRACT_SIZES}
-          cat ${PR_BRANCH_CONTRACT_SIZES}
           # Measure contract sizes for the upstream branch
           git clone --verbose --depth 1 --branch ${UPSTREAM_BRANCH} ${UPSTREAM_REPO} ${UPSTREAM_DIR}
-          echo "sss2"
-          ls
           pushd ${UPSTREAM_DIR}
-          echo "sss3"
-          ls
           ${SCRIPTS_DIR}/for_all_contracts_exec.sh --path integration-tests --quiet -- ${SCRIPTS_DIR}/contract_size.sh {} > ${UPSTREAM_CONTRACT_SIZES}
           sed -ie 's/^integration-tests\///g' ${UPSTREAM_CONTRACT_SIZES}
-          cat ${UPSTREAM_CONTRACT_SIZES}
           popd
 
           # Build the comparison table
@@ -78,5 +70,6 @@ jobs:
           cat ${CONTRACT_SIZES_DIFF}
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
+          echo "Workflow: ${WORKFLOW_URL}"
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} '${WORKFLOW_URL}' < ${CONTRACT_SIZES_DIFF}
           rm -rf ${MEASUREMENTS_DIR}
