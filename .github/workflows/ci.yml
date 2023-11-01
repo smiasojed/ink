@@ -593,13 +593,4 @@ jobs:
 # measurements
 
   measurements:
-    permissions:
-      issues: write
     uses: ./.github/workflows/measurements.yml
-
-# # publish
-
-#   publish:
-#     permissions:
-#       contents: write
-#     uses: ./.github/workflows/publish.yml

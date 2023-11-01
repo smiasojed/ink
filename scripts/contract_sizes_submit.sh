@@ -12,8 +12,7 @@ set -eu
 set -o pipefail
 
 pr_comments_url=$1
-ink_commits_url=$2
-workflow_url=$3
+workflow_url=$2
 diffs_markdown_table=$(</dev/stdin)
 
 # If there is already a comment by the user `paritytech-cicd-pr` in the ink! PR which triggered
@@ -33,7 +32,7 @@ fi
 echo $verb
 echo $pr_comments_url
 
-ink_master_head=$(curl -s $ink_commits_url | jq -r .sha)
+ink_master_head=$(curl -s "https://api.github.com/repos/smiasojed/ink/commits/master" | jq -r .sha)
 head_in_branch=$(git log | grep -q $ink_master_head; echo $?)
 
 master_ahead=""
