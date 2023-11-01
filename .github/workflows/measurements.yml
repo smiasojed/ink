@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 100
+          fetch-depth: 1
 
       - name: Cache
         uses: Swatinem/rust-cache@v2
@@ -40,7 +40,6 @@ jobs:
         env:
           PR_BRANCH:               ${{ github.head_ref }}
           PR_NUMBER:               ${{ github.event.number }}
-          GITHUB_PR_TOKEN:         ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
@@ -69,7 +68,19 @@ jobs:
           # Build the comparison table
           ${SCRIPTS_DIR}/contract_sizes_diff.sh ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES} > ${CONTRACT_SIZES_DIFF}
           cat ${CONTRACT_SIZES_DIFF}
-          # Submit the comparison table as a comment to the PR
-          echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${INK_MASTER_COMMIT_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
+
+          # Create job artifact
+          mkdir measurements_artifacts
+          mv ${CONTRACT_SIZES_DIFF} ./measurements_artifacts/contract_sizes_diff.md
+          echo "PR_COMMENTS_URL=${PR_COMMENTS_URL}" >  ./measurements_artifacts/context.out
+          echo "WORKFLOW_URL=${WORKFLOW_URL}" >>  ./measurements_artifacts/context.out
+
+          # # Submit the comparison table as a comment to the PR
+          # echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
+          # GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
           rm -rf ${MEASUREMENTS_DIR}
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.job }}_${{ github.sha }}-data
+          path: ./measurements_artifacts
