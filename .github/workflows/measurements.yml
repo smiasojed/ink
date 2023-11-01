@@ -48,11 +48,12 @@ jobs:
           PR_BRANCH_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes"
           UPSTREAM_BRANCH="master"
           UPSTREAM_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${UPSTREAM_BRANCH}_contract_sizes"
-          UPSTREAM_REPO="https://github.com/paritytech/ink.git"
+          UPSTREAM_REPO="https://github.com/smiasojed/ink.git"
           UPSTREAM_DIR="${MEASUREMENTS_DIR}/ink-${UPSTREAM_BRANCH}"
           CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes_diff.md"
-          PR_COMMENTS_URL="https://api.github.com/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
+          PR_COMMENTS_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
           WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          INK_MASTER_COMMIT_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits/master"
 
           # Measure contract sizes for the current branch
           mkdir ${MEASUREMENTS_DIR}
@@ -70,5 +71,5 @@ jobs:
           cat ${CONTRACT_SIZES_DIFF}
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${INK_MASTER_COMMIT_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
           rm -rf ${MEASUREMENTS_DIR}
