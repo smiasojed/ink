@@ -597,9 +597,9 @@ jobs:
       issues: write
     uses: ./.github/workflows/measurements.yml
 
-# publish
+# # publish
 
-  publish:
-    permissions:
-      contents: write
-    uses: ./.github/workflows/publish.yml
+#   publish:
+#     permissions:
+#       contents: write
+#     uses: ./.github/workflows/publish.yml
