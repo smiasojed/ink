@@ -5,13 +5,14 @@
 # Usage:
 #   ./contract_sizes_submit.sh \
 #     <github_url_to_comments_of_pr>
+#     <github_url_to_workflow>
 #     < <diffs-csv-file>
 
 set -eu
 set -o pipefail
 
 pr_comments_url=$1
-#workflow_url=$2
+workflow_url=$2
 diffs_markdown_table=$(</dev/stdin)
 
 # If there is already a comment by the user `paritytech-cicd-pr` in the ink! PR which triggered
@@ -49,7 +50,7 @@ These are the results when building the \`integration-tests/*\` contracts from t
 
 ${diffs_markdown_table}
 
-[Link to the run](workflow_url) | Last update: ${updated}
+[Link to the run](${workflow_url}) | Last update: ${updated}
 EOF
 )
 json_body=$(jq -n --arg body "${body}" '{ "body": $body}')
