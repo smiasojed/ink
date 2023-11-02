@@ -19,12 +19,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 100
             #  run_id: ${{github.event.workflow_run.id }},
 
       - name: 'Download artifact'
-        uses: actions/github-script@v3.1.0
+        uses: actions/github-script@v6
         with:
+          retries: 3
           script: |
             var artifacts = await github.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
@@ -49,6 +50,9 @@ jobs:
         env:
           GITHUB_PR_TOKEN:         ${{ secrets.github_token }}
         run: |
+          #PR_COMMENTS_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
+          #WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+
           CC_VERSION="1.5.0"
           #ls measurements
           cat context.out
