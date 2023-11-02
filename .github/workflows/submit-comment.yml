@@ -9,14 +9,10 @@ on:
 jobs:
   comment:
     permissions:
-      issues: write
+     # issues: write
+      pull-requests: write
         # contents: write
     runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     shell: bash
-    # container:
-    #   image: paritytech/ci-unified:bullseye-1.73.0
     timeout-minutes: 5
     # if: >
     #   github.event.workflow_run.event == 'pull_request' &&
@@ -57,6 +53,7 @@ jobs:
         env:
           GITHUB_PR_TOKEN:         ${{ secrets.github_token }}
         run: |
+          CC_VERSION="1.5.0"
           #ls measurements
           cat context.out
           set -o allexport
@@ -64,5 +61,5 @@ jobs:
           set +o allexport
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} scripts/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} <  ./contract_sizes_diff.md
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} scripts/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} ${CC_VERSION}<  ./contract_sizes_diff.md
               
