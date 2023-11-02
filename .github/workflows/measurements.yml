@@ -31,9 +31,6 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      # - name: Dump
-      #   run: echo '${{ toJSON(github) }}'
-
       - name: Measure Contract Sizes
         env:
           PR_BRANCH:               ${{ github.head_ref }}
@@ -42,15 +39,13 @@ jobs:
           # Variables
           MEASUREMENTS_DIR="${GITHUB_WORKSPACE}/../ink-ci-measurements"
           SCRIPTS_DIR="${GITHUB_WORKSPACE}/scripts"
+          ARTIFACTS_DIR="${GITHUB_WORKSPACE}/artifacts"
           PR_BRANCH_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes"
           UPSTREAM_BRANCH="master"
           UPSTREAM_CONTRACT_SIZES="${MEASUREMENTS_DIR}/${UPSTREAM_BRANCH}_contract_sizes"
           UPSTREAM_REPO="https://github.com/smiasojed/ink.git"
           UPSTREAM_DIR="${MEASUREMENTS_DIR}/ink-${UPSTREAM_BRANCH}"
           CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes_diff.md"
-          PR_COMMENTS_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
-          WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-          INK_MASTER_COMMIT_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/commits/master"
 
           # Measure contract sizes for the current branch
           mkdir ${MEASUREMENTS_DIR}
@@ -68,17 +63,14 @@ jobs:
           cat ${CONTRACT_SIZES_DIFF}
 
           # Create job artifact
-          mkdir measurements_artifacts
-          mv ${CONTRACT_SIZES_DIFF} ./measurements_artifacts/contract_sizes_diff.md
-          echo "PR_COMMENTS_URL=${PR_COMMENTS_URL}" >  ./measurements_artifacts/context.out
-          echo "WORKFLOW_URL=${WORKFLOW_URL}" >>  ./measurements_artifacts/context.out
-
-          # # Submit the comparison table as a comment to the PR
-          # echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          # GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} ${SCRIPTS_DIR}/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} < ${CONTRACT_SIZES_DIFF}
+          mkdir ${ARTIFACTS_DIR}
+          mv ${CONTRACT_SIZES_DIFF} ${ARTIFACTS_DIR}/contract_sizes_diff.md
+          CARGO_CONTRACT_VERSION=$(cargo-contract --version | egrep --only-matching "cargo-contract.* .*-x86" | sed -s 's/-x86//')
+          echo "CARGO_CONTRACT_VERSION=${CARGO_CONTRACT_VERSION}" > ${ARTIFACTS_DIR}/context.out
+          echo "PR_NUMBER=${PR_NUMBER}" >> ${ARTIFACTS_DIR}/context.out
           rm -rf ${MEASUREMENTS_DIR}
 
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ github.job }}-data
-          path: ./measurements_artifacts
+          path: ./artifacts
