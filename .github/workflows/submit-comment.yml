@@ -8,9 +8,8 @@ on:
 
 jobs:
   comment:
-    permissions: write-all
-
-        # issues: write
+    permissions:
+      issues: write
         # contents: write
     runs-on: ubuntu-latest
     # defaults:
