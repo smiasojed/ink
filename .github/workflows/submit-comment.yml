@@ -20,12 +20,13 @@ jobs:
           fetch-depth: 1
       - uses: actions/download-artifact@v3
         with:
-          name: contract-sizes_${{ github.event.workflow_run.id }}-data
+#          name: contract-sizes_${{ github.event.workflow_run.id }}-data
           path: measurements
       - name: Submit Comment
         env:
           GITHUB_PR_TOKEN:         ${{ secrets.github_token }}
         run: |
+          ls measurements
           cat measurements/context.out
           set -o allexport
           source measurements/context.out
