@@ -31,8 +31,8 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      # - name: Dump
-      #   run: echo '${{ toJSON(github) }}'
+      - name: Dump
+        run: echo '${{ toJSON(github) }}'
 
       - name: Measure Contract Sizes
         env:
