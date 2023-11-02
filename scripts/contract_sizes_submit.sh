@@ -42,7 +42,8 @@ if [ "$head_in_branch" == "1" ]; then
 fi
 
 updated=$(TZ='Europe/Berlin' date)
-cc_version=$(cargo-contract --version | egrep --only-matching "cargo-contract.* .*-x86" | sed -s 's/-x86//')
+#cc_version=$(cargo-contract --version | egrep --only-matching "cargo-contract.* .*-x86" | sed -s 's/-x86//')
+cc_version="1.5.0"
 body=$(cat << EOF
 ## 🦑 📈 ink! Example Contracts ‒ Changes Report 📉 🦑
 ${master_ahead}
