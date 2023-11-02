@@ -20,14 +20,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
-            #  run_id: ${{github.event.workflow_run.id }},
+            #  run_id: ${{ github.event.workflow_run.id }},
 
       - name: 'Download artifact'
         uses: actions/github-script@v6
         with:
           retries: 3
           script: |
-            var artifacts = await github.actions.listWorkflowRunArtifacts({
+            var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
               run_id: 6738042492,
@@ -35,7 +35,7 @@ jobs:
             var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
             return artifact.name == "contract-sizes-data"
             })[0];
-            var download = await github.actions.downloadArtifact({
+            var download = await github.rest.actions.downloadArtifact({
               owner: context.repo.owner,
               repo: context.repo.repo,
               artifact_id: matchArtifact.id,
@@ -49,17 +49,18 @@ jobs:
       - name: Submit Comment
         env:
           GITHUB_PR_TOKEN:         ${{ secrets.github_token }}
+          GITHUB_PR_WORKFLOW_ID:   ${{ github.event.workflow_run.id }}
         run: |
-          #PR_COMMENTS_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
-          #WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          # # context.out is considered as an untrusted file
+          # PR_NUMBER=$(grep -oE 'PR_NUMBER="[^"]+"' context.out | awk -F '"' '{print $2}')
+          # CARGO_CONTRACT_VERSION=$(grep -oE 'CARGO_CONTRACT_VERSION="[^"]+"' context.out | awk -F '"' '{print $2}')
+          # PR_COMMENTS_URL="${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments"
+          # WORKFLOW_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_PR_WORKFLOW_ID}"
 
-          CC_VERSION="1.5.0"
-          #ls measurements
-          cat context.out
           set -o allexport
           source context.out
           set +o allexport
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
-          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} scripts/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} ${CC_VERSION}<  ./contract_sizes_diff.md
+          GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} scripts/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} ${CARGO_CONTRACT_VERSION} < ./contract_sizes_diff.md
               
