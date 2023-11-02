@@ -80,5 +80,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}_${{ github.run_id }}-data
+          name: ${{ github.job }}-data
           path: ./measurements_artifacts
