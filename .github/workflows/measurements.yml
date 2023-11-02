@@ -31,8 +31,8 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
-      - name: Dump
-        run: echo '${{ toJSON(github) }}'
+      # - name: Dump
+      #   run: echo '${{ toJSON(github) }}'
 
       - name: Measure Contract Sizes
         env:
@@ -80,5 +80,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: ${{ github.job }}_${{ github.sha }}-data
+          name: ${{ github.job }}_${{ github.run_id }}-data
           path: ./measurements_artifacts
