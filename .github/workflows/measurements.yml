@@ -34,7 +34,8 @@ jobs:
       # Avoid issue with git
       - name: Chown user
         run: |
-          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+          echo $USER
+        #  sudo chown -R $USER:$USER $GITHUB_WORKSPACE
 
       - name: Measure Contract Sizes
         env:
@@ -51,6 +52,9 @@ jobs:
           UPSTREAM_REPO="https://github.com/smiasojed/ink.git"
           UPSTREAM_DIR="${MEASUREMENTS_DIR}/ink-${UPSTREAM_BRANCH}"
           CONTRACT_SIZES_DIFF="${MEASUREMENTS_DIR}/${PR_BRANCH}_contract_sizes_diff.md"
+          ls -all
+          git config --global --add safe.directory '*'
+
 
           # Measure contract sizes for the current branch
           mkdir ${MEASUREMENTS_DIR}
