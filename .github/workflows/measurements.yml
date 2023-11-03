@@ -31,6 +31,11 @@ jobs:
       - name: Rust Info
         uses: ./.github/rust-info
 
+      # Avoid issue with git
+      - name: Chown user
+        run: |
+          sudo chown -R $USER:$USER $GITHUB_WORKSPACE
+
       - name: Measure Contract Sizes
         env:
           PR_BRANCH:               ${{ github.head_ref }}
