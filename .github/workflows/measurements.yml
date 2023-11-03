@@ -66,8 +66,8 @@ jobs:
           mkdir ${ARTIFACTS_DIR}
           mv ${CONTRACT_SIZES_DIFF} ${ARTIFACTS_DIR}/contract_sizes_diff.md
           CARGO_CONTRACT_VERSION=$(cargo-contract --version | egrep --only-matching "cargo-contract.* .*-x86" | sed -s 's/-x86//')
-          echo "CARGO_CONTRACT_VERSION=${CARGO_CONTRACT_VERSION}" > ${ARTIFACTS_DIR}/context.out
-          echo "PR_NUMBER=${PR_NUMBER}" >> ${ARTIFACTS_DIR}/context.out
+          echo "CARGO_CONTRACT_VERSION=\"${CARGO_CONTRACT_VERSION}\"" > ${ARTIFACTS_DIR}/context.out
+          echo "PR_NUMBER=\"${PR_NUMBER}\"" >> ${ARTIFACTS_DIR}/context.out
           rm -rf ${MEASUREMENTS_DIR}
 
       - uses: actions/upload-artifact@v3
