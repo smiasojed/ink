@@ -5,8 +5,7 @@ on:
     workflows: 
       - continuous-integration
     types:
-      # - completed
-      - in_progress
+      - completed
 
 jobs:
   submit-contract-sizes:
