@@ -50,8 +50,6 @@ jobs:
       #       var fs = require('fs');
       #       fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/data.zip`, Buffer.from(download.data));
 
-      - run: unzip data.zip
-
       - name: Submit Comment
         env:
           GITHUB_PR_TOKEN:         ${{ secrets.github_token }}
