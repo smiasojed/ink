@@ -5,7 +5,8 @@ on:
     workflows: 
       - continuous-integration
     types:
-      - completed
+      # - completed
+      - in_progress
 
 jobs:
   submit-contract-sizes:
@@ -22,7 +23,7 @@ jobs:
         with:
           fetch-depth: 100
 
-      - name: Download Artifact
+      - name: Download Contract Sizes
         uses: ./.github/download-artifact
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
