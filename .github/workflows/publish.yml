@@ -26,6 +26,12 @@ jobs:
         with:
           fetch-depth: 100
 
+      - name: Download Contract Sizes
+        uses: ./.github/download-artifact
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ARTIFACT_NAME: docs-data
+
       # - name: Dump GitHub context
       #   env:
       #     GITHUB_CONTEXT: ${{ toJson(github) }}
