@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 100
 
       - name: Download Artifact
-        uses: axtions/download-artifact
+        uses: ./.github/download-artifact
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_NAME: contract-sizes-data
