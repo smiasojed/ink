@@ -34,7 +34,7 @@ fi
 echo $verb
 echo $pr_comments_url
 
-ink_master_head=$(curl -s "https://api.github.com/repos/smiasojed/ink/commits/master" | jq -r .sha)
+ink_master_head=$(curl -s "https://api.github.com/repos/paritytech/ink/commits/master" | jq -r .sha)
 head_in_branch=$(git log | grep -q $ink_master_head; echo $?)
 
 master_ahead=""
@@ -44,8 +44,6 @@ if [ "$head_in_branch" == "1" ]; then
 fi
 
 updated=$(TZ='Europe/Berlin' date)
-#cc_version=$(cargo-contract --version | egrep --only-matching "cargo-contract.* .*-x86" | sed -s 's/-x86//')
-cc_version="1.5.0"
 body=$(cat << EOF
 ## 🦑 📈 ink! Example Contracts ‒ Changes Report 📉 🦑
 ${master_ahead}
