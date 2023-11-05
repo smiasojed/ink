@@ -68,7 +68,7 @@ jobs:
           ${SCRIPTS_DIR}/for_all_contracts_exec.sh --path integration-tests --quiet -- ${SCRIPTS_DIR}/contract_size.sh {} > ${UPSTREAM_CONTRACT_SIZES}
           sed -ie 's/^integration-tests\///g' ${UPSTREAM_CONTRACT_SIZES}
           popd
-          diff ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES}
+          #diff ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES}
           # Build the comparison table
           ${SCRIPTS_DIR}/contract_sizes_diff.sh ${UPSTREAM_CONTRACT_SIZES} ${PR_BRANCH_CONTRACT_SIZES} > ${CONTRACT_SIZES_DIFF}
           cat ${CONTRACT_SIZES_DIFF}
