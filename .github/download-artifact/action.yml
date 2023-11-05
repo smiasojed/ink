@@ -11,7 +11,7 @@ inputs:
 runs:
   using: composite
   steps:
-      - name: Download ${{ inputs.ARTIFACT_NAME }}
+      - name: Download Artifact
         uses: actions/github-script@v6
         with:
           retries: 3
