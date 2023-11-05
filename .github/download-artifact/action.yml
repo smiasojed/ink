@@ -17,7 +17,7 @@ runs:
           retries: 3
           github-token: ${{ inputs.GITHUB_TOKEN }}
           script: |
-            const artifactName = ${{ inputs.ARTIFACT_NAME }};
+            const artifactName = '${{ inputs.ARTIFACT_NAME }}';
 
             var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
