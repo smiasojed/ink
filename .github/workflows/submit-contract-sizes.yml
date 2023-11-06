@@ -1,8 +1,8 @@
 # The workflow has write access, so it needs to be isolated for security reasons from pull request-based workflows,
 # which may be triggered from forked repositories.
-on: 
+on:
   workflow_run:
-    workflows: 
+    workflows:
       - continuous-integration
     types:
       - completed
@@ -13,9 +13,9 @@ jobs:
       pull-requests: write
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.event.workflow_run.event == 'pull_request' 
-      # &&
-      #   github.event.workflow_run.conclusion == 'success'
+    if: >
+      github.event.workflow_run.event == 'pull_request' &&
+        github.event.workflow_run.conclusion == 'success'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,27 +28,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ARTIFACT_NAME: contract-sizes-data
 
-      # - name: 'Download artifact'
-      #   uses: actions/github-script@v6
-      #   with:
-      #     retries: 3
-      #     script: |
-      #       var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         run_id: ${{ github.event.workflow_run.id }},
-      #       });
-      #       var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
-      #       return artifact.name == "contract-sizes-data"
-      #       })[0];
-      #       var download = await github.rest.actions.downloadArtifact({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         artifact_id: matchArtifact.id,
-      #         archive_format: 'zip',
-      #       });
-      #       var fs = require('fs');
-      #       fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/data.zip`, Buffer.from(download.data));
 
       - name: Submit Comment
         env:
@@ -64,4 +43,4 @@ jobs:
           # Submit the comparison table as a comment to the PR
           echo "Submitting contract sizes diff to ${PR_COMMENTS_URL}"
           GITHUB_PR_TOKEN=${GITHUB_PR_TOKEN} scripts/contract_sizes_submit.sh ${PR_COMMENTS_URL} ${WORKFLOW_URL} ${CARGO_CONTRACT_VERSION} < ./contract_sizes_diff.md
-              
+

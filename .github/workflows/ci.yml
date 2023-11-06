@@ -593,5 +593,5 @@ jobs:
 # measurements
 
   measurements:
-#    needs: [examples-docs, examples-contract-build, examples-test]
+    needs: [examples-docs, examples-contract-build, examples-test]
     uses: ./.github/workflows/measurements.yml
