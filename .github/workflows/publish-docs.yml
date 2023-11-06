@@ -5,16 +5,14 @@ on:
     workflows: 
       - continuous-integration
     types:
-      # - completed
-      - in_progress
+      - completed
 
 jobs:
   publish-docs:
-    # if: >
-    #   github.event.workflow_run.event == 'push' &&
-    #     github.event.workflow_run.head_branch == 'master' &&
-    #     github.event.workflow_run.conclusion == 'success'
-    # if: ${{ github.event_name == 'push' }} && (${{ github.ref_name == 'master' }} || ${{ github.ref_type == 'tag' }})
+    if: >
+      github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'master'
+    #    github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
