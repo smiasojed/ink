@@ -44,7 +44,7 @@ calculation strategy.</p>
 <p>Returns the size in bytes of the pre-existing value at the specified key if any.</p>
 <h5 id="panics"><a href="#panics">Panics</a></h5>
 <p>Traps if the encoded <code>value</code> doesn’t fit into the static buffer.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.try_insert" class="method"><a class="src rightside" href="../src/ink_storage/lazy/mapping.rs.html#161-179">source</a><h4 class="code-header">pub fn <a href="#method.try_insert" class="fn">try_insert</a>&lt;Q, R&gt;(&amp;mut self, key: Q, value: <a class="primitive" href="https://doc.rust-lang.org/1.73.0/std/primitive.reference.html">&amp;R</a>) -&gt; <a class="type" href="../ink_env/error/type.Result.html" title="type ink_env::error::Result">Result</a>&lt;<a class="enum" href="https://doc.rust-lang.org/1.73.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.73.0/std/primitive.u32.html">u32</a>&gt;&gt;<span class="where fmt-newline">where
+</div></details><details class="toggle method-toggle" open><summary><section id="method.try_insert" class="method"><a class="src rightside" href="../src/ink_storage/lazy/mapping.rs.html#161-179">source</a><h4 class="code-header">pub fn <a href="#method.try_insert" class="fn">try_insert</a>&lt;Q, R&gt;(&amp;mut self, key: Q, value: <a class="primitive" href="https://doc.rust-lang.org/1.73.0/std/primitive.reference.html">&amp;R</a>) -&gt; Result&lt;<a class="enum" href="https://doc.rust-lang.org/1.73.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/1.73.0/std/primitive.u32.html">u32</a>&gt;&gt;<span class="where fmt-newline">where
     Q: EncodeLike&lt;K&gt;,
     R: Storable + EncodeLike&lt;V&gt;,</span></h4></section></summary><div class="docblock"><p>Try to insert the given <code>value</code> into the mapping under given <code>key</code>.</p>
 <p>Fails if <code>value</code> exceeds the static buffer size.</p>
@@ -60,7 +60,7 @@ bytes of the pre-existing value at the specified key if any.</li>
 <p>Returns <code>None</code> if no <code>value</code> exists at the given <code>key</code>.</p>
 <h5 id="panics-1"><a href="#panics-1">Panics</a></h5>
 <p>Traps if the encoded <code>value</code> doesn’t fit into the static buffer.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.try_get" class="method"><a class="src rightside" href="../src/ink_storage/lazy/mapping.rs.html#205-225">source</a><h4 class="code-header">pub fn <a href="#method.try_get" class="fn">try_get</a>&lt;Q&gt;(&amp;self, key: Q) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.73.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="type" href="../ink_env/error/type.Result.html" title="type ink_env::error::Result">Result</a>&lt;V&gt;&gt;<span class="where fmt-newline">where
+</div></details><details class="toggle method-toggle" open><summary><section id="method.try_get" class="method"><a class="src rightside" href="../src/ink_storage/lazy/mapping.rs.html#205-225">source</a><h4 class="code-header">pub fn <a href="#method.try_get" class="fn">try_get</a>&lt;Q&gt;(&amp;self, key: Q) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.73.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Result&lt;V&gt;&gt;<span class="where fmt-newline">where
     Q: EncodeLike&lt;K&gt;,</span></h4></section></summary><div class="docblock"><p>Try to get the <code>value</code> at the given <code>key</code>.</p>
 <p>Returns:</p>
 <ul>
@@ -79,7 +79,7 @@ storage.</p>
 <p>This method uses the
 <a href="https://github.com/paritytech/substrate/tree/master/frame/contracts#unstable-interfaces">unstable interface</a>,
 which is unsafe and normally is not available on production chains.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.try_take" class="method"><a class="src rightside" href="../src/ink_storage/lazy/mapping.rs.html#265-285">source</a><h4 class="code-header">pub fn <a href="#method.try_take" class="fn">try_take</a>&lt;Q&gt;(&amp;self, key: Q) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.73.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="type" href="../ink_env/error/type.Result.html" title="type ink_env::error::Result">Result</a>&lt;V&gt;&gt;<span class="where fmt-newline">where
+</div></details><details class="toggle method-toggle" open><summary><section id="method.try_take" class="method"><a class="src rightside" href="../src/ink_storage/lazy/mapping.rs.html#265-285">source</a><h4 class="code-header">pub fn <a href="#method.try_take" class="fn">try_take</a>&lt;Q&gt;(&amp;self, key: Q) -&gt; <a class="enum" href="https://doc.rust-lang.org/1.73.0/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;Result&lt;V&gt;&gt;<span class="where fmt-newline">where
     Q: EncodeLike&lt;K&gt;,</span></h4></section></summary><div class="docblock"><p>Try to take the <code>value</code> at the given <code>key</code>.
 On success, this operation will remove the value from the mapping</p>
 <p>Returns:</p>
