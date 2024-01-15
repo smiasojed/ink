@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/ink/ir/src/ir/attrs.rs`."><title>attrs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cb6f1f67f1bcd037.css" id="mainThemeStyle"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="ink_ir" data-themes="" data-resource-suffix="" data-rustdoc-version="1.73.0 (cc66ad468 2023-10-03)" data-channel="1.73.0" data-search-js="search-6dfdfced5eff6596.js" data-settings-js="settings-de11bff964e9d4e5.js" data-settings-css="settings-8c76f75bfb6bd192.css" data-theme-light-css="light-1596385f77d47ef2.css" data-theme-dark-css="dark-0a43001d3fc2282c.css" data-theme-ayu-css="ayu-fd19013d6ce078bf.css" ><script src="../../../static.files/storage-db41da1a38ea3cb8.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-0795b7d26be81095.js"></script><noscript><link rel="stylesheet" media="(prefers-color-scheme:light)" href="../../../static.files/light-1596385f77d47ef2.css"><link rel="stylesheet" media="(prefers-color-scheme:dark)" href="../../../static.files/dark-0a43001d3fc2282c.css"><link rel="stylesheet" href="../../../static.files/noscript-cffde32267a19fd6.css"></noscript><link rel="icon" href="https://use.ink/crate-docs/favicon.png"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../ink_ir/index.html"><img src="https://use.ink/img/crate-docs/logo.png" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `crates/ink/ir/src/ir/attrs.rs`."><title>attrs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Bold-a2c9cd1067f8b328.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-fa3bb1812debf86c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="ink_ir" data-themes="" data-resource-suffix="" data-rustdoc-version="1.74.0 (79e9716c9 2023-11-13)" data-channel="1.74.0" data-search-js="search-8be46b629f5f14a8.js" data-settings-js="settings-74424d7eec62a23e.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c5bd66d33317d69f.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="icon" href="https://use.ink/crate-docs/favicon.png"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><a class="sub-logo-container" href="../../../ink_ir/index.html"><img src="https://use.ink/img/crate-docs/logo.png" alt="logo"></a><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1509,6 +1509,49 @@
 <a href="#1509" id="1509">1509</a>
 <a href="#1510" id="1510">1510</a>
 <a href="#1511" id="1511">1511</a>
+<a href="#1512" id="1512">1512</a>
+<a href="#1513" id="1513">1513</a>
+<a href="#1514" id="1514">1514</a>
+<a href="#1515" id="1515">1515</a>
+<a href="#1516" id="1516">1516</a>
+<a href="#1517" id="1517">1517</a>
+<a href="#1518" id="1518">1518</a>
+<a href="#1519" id="1519">1519</a>
+<a href="#1520" id="1520">1520</a>
+<a href="#1521" id="1521">1521</a>
+<a href="#1522" id="1522">1522</a>
+<a href="#1523" id="1523">1523</a>
+<a href="#1524" id="1524">1524</a>
+<a href="#1525" id="1525">1525</a>
+<a href="#1526" id="1526">1526</a>
+<a href="#1527" id="1527">1527</a>
+<a href="#1528" id="1528">1528</a>
+<a href="#1529" id="1529">1529</a>
+<a href="#1530" id="1530">1530</a>
+<a href="#1531" id="1531">1531</a>
+<a href="#1532" id="1532">1532</a>
+<a href="#1533" id="1533">1533</a>
+<a href="#1534" id="1534">1534</a>
+<a href="#1535" id="1535">1535</a>
+<a href="#1536" id="1536">1536</a>
+<a href="#1537" id="1537">1537</a>
+<a href="#1538" id="1538">1538</a>
+<a href="#1539" id="1539">1539</a>
+<a href="#1540" id="1540">1540</a>
+<a href="#1541" id="1541">1541</a>
+<a href="#1542" id="1542">1542</a>
+<a href="#1543" id="1543">1543</a>
+<a href="#1544" id="1544">1544</a>
+<a href="#1545" id="1545">1545</a>
+<a href="#1546" id="1546">1546</a>
+<a href="#1547" id="1547">1547</a>
+<a href="#1548" id="1548">1548</a>
+<a href="#1549" id="1549">1549</a>
+<a href="#1550" id="1550">1550</a>
+<a href="#1551" id="1551">1551</a>
+<a href="#1552" id="1552">1552</a>
+<a href="#1553" id="1553">1553</a>
+<a href="#1554" id="1554">1554</a>
 </pre></div><pre class="rust"><code><span class="comment">// Copyright (C) Parity Technologies (UK) Ltd.
 //
 // Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
@@ -1549,7 +1592,7 @@
     error::ExtError <span class="kw">as _</span>,
     ir,
     ir::{
-        ExtensionId,
+        chain_extension::FunctionId,
         Selector,
     },
 };
@@ -1570,13 +1613,13 @@
 
     <span class="kw">fn </span>extract_docs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
         <span class="kw">if </span>!<span class="self">self</span>.is_doc_attribute() {
-            <span class="kw">return </span><span class="prelude-val">None
-        </span>}
+            <span class="kw">return </span><span class="prelude-val">None</span>;
+        }
         <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.meta {
             syn::Meta::NameValue(nv) =&gt; {
                 <span class="kw">if let </span>syn::Expr::Lit(l) = <span class="kw-2">&amp;</span>nv.value {
                     <span class="kw">if let </span>syn::Lit::Str(s) = <span class="kw-2">&amp;</span>l.lit {
-                        <span class="kw">return </span><span class="prelude-val">Some</span>(s.value())
+                        <span class="kw">return </span><span class="prelude-val">Some</span>(s.value());
                     }
                 }
             }
@@ -1683,7 +1726,7 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format_err!</span>(
                 <span class="self">self</span>.span(),
                 <span class="string">&quot;unexpected first ink! attribute argument&quot;</span>,
-            ))
+            ));
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1711,7 +1754,7 @@
                 .into_combine(<span class="macro">format_err!</span>(
                     seen.span(),
                     <span class="string">&quot;first equal ink! attribute argument here&quot;
-                </span>)))
+                </span>)));
             }
             <span class="kw">if let </span><span class="prelude-val">Some</span>(seen) = seen2.get(<span class="kw-2">&amp;</span>arg.kind().kind()) {
                 <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format_err!</span>(
@@ -1721,7 +1764,7 @@
                 .into_combine(<span class="macro">format_err!</span>(
                     <span class="kw-2">*</span>seen,
                     <span class="string">&quot;first equal ink! attribute argument with equal kind here&quot;
-                </span>)))
+                </span>)));
             }
             seen.insert(arg);
             seen2.insert(arg.kind().kind(), arg.span());
@@ -1753,7 +1796,7 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format_err!</span>(
                 Span::call_site(),
                 <span class="string">&quot;encountered unexpected empty expanded ink! attribute arguments&quot;</span>,
-            ))
+            ));
         }
         <span class="self">Self</span>::ensure_no_duplicate_args(<span class="kw-2">&amp;</span>args)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">Self </span>{ args })
@@ -1779,7 +1822,7 @@
     </span><span class="kw">pub fn </span>namespace(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;ir::Namespace&gt; {
         <span class="self">self</span>.args().find_map(|arg| {
             <span class="kw">if let </span>ir::AttributeArg::Namespace(namespace) = arg.kind() {
-                <span class="kw">return </span><span class="prelude-val">Some</span>(namespace.clone())
+                <span class="kw">return </span><span class="prelude-val">Some</span>(namespace.clone());
             }
             <span class="prelude-val">None
         </span>})
@@ -1789,7 +1832,17 @@
     </span><span class="kw">pub fn </span>selector(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SelectorOrWildcard&gt; {
         <span class="self">self</span>.args().find_map(|arg| {
             <span class="kw">if let </span>ir::AttributeArg::Selector(selector) = arg.kind() {
-                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">*</span>selector)
+                <span class="kw">return </span><span class="prelude-val">Some</span>(<span class="kw-2">*</span>selector);
+            }
+            <span class="prelude-val">None
+        </span>})
+    }
+
+    <span class="doccomment">/// Returns the signature topic of the ink! attribute if any.
+    </span><span class="kw">pub fn </span>signature_topic_hex(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
+        <span class="self">self</span>.args().find_map(|arg| {
+            <span class="kw">if let </span>ir::AttributeArg::SignatureTopic(hash) = arg.kind() {
+                <span class="kw">return </span><span class="prelude-val">Some</span>(hash.clone());
             }
             <span class="prelude-val">None
         </span>})
@@ -1874,8 +1927,11 @@
     <span class="doccomment">/// `#[ink(selector = _)]`
     /// `#[ink(selector = 0xDEADBEEF)]`
     </span>Selector,
-    <span class="doccomment">/// `#[ink(extension = N: u32)]`
-    </span>Extension,
+    <span class="doccomment">/// `#[ink(signature_topic =
+    /// &quot;325c98ff66bd0d9d1c10789ae1f2a17bdfb2dcf6aa3d8092669afafdef1cb72d&quot;)]`
+    </span>SignatureTopicArg,
+    <span class="doccomment">/// `#[ink(function = N: u16)]`
+    </span>Function,
     <span class="doccomment">/// `#[ink(namespace = &quot;my_namespace&quot;)]`
     </span>Namespace,
     <span class="doccomment">/// `#[ink(impl)]`
@@ -1929,6 +1985,9 @@
     /// - `#[ink(selector = _)]` Applied on ink! messages to define a fallback messages
     ///   that is invoked if no other ink! message matches a given selector.
     </span>Selector(SelectorOrWildcard),
+    <span class="doccomment">/// `#[ink(signature_topic =
+    /// &quot;325c98ff66bd0d9d1c10789ae1f2a17bdfb2dcf6aa3d8092669afafdef1cb72d&quot;)]`
+    </span>SignatureTopic(String),
     <span class="doccomment">/// `#[ink(namespace = &quot;my_namespace&quot;)]`
     ///
     /// Applied on ink! trait implementation blocks to disambiguate other trait
@@ -1946,13 +2005,13 @@
     /// Note that ink! messages and constructors still need to be explicitly
     /// flagged as such.
     </span>Implementation,
-    <span class="doccomment">/// `#[ink(extension = N: u32)]`
+    <span class="doccomment">/// `#[ink(function = N: u16)]`
     ///
     /// Applies on ink! chain extension method to set their `func_id` parameter.
-    /// Every chain extension method must have exactly one ink! `extension` attribute.
+    /// Every chain extension method must have exactly one ink! `function` attribute.
     ///
     /// Used by the `#[ink::chain_extension]` procedural macro.
-    </span>Extension(ExtensionId),
+    </span>Function(FunctionId),
     <span class="doccomment">/// `#[ink(handle_status = flag: bool)]`
     ///
     /// Used by the `#[ink::chain_extension]` procedural macro.
@@ -1973,8 +2032,11 @@
             <span class="self">Self</span>::Selector =&gt; {
                 <span class="macro">write!</span>(f, <span class="string">&quot;selector = S:[u8; 4] || _&quot;</span>)
             }
-            <span class="self">Self</span>::Extension =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;extension = N:u32)&quot;</span>)
+            <span class="self">Self</span>::SignatureTopicArg =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;signature_topic = S:[u8; 32]&quot;</span>)
+            }
+            <span class="self">Self</span>::Function =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;function = N:u16)&quot;</span>)
             }
             <span class="self">Self</span>::Namespace =&gt; {
                 <span class="macro">write!</span>(f, <span class="string">&quot;namespace = N:string&quot;</span>)
@@ -1997,7 +2059,8 @@
             <span class="self">Self</span>::Constructor =&gt; AttributeArgKind::Constructor,
             <span class="self">Self</span>::Payable =&gt; AttributeArgKind::Payable,
             <span class="self">Self</span>::Selector(<span class="kw">_</span>) =&gt; AttributeArgKind::Selector,
-            <span class="self">Self</span>::Extension(<span class="kw">_</span>) =&gt; AttributeArgKind::Extension,
+            <span class="self">Self</span>::SignatureTopic(<span class="kw">_</span>) =&gt; AttributeArgKind::SignatureTopicArg,
+            <span class="self">Self</span>::Function(<span class="kw">_</span>) =&gt; AttributeArgKind::Function,
             <span class="self">Self</span>::Namespace(<span class="kw">_</span>) =&gt; AttributeArgKind::Namespace,
             <span class="self">Self</span>::Implementation =&gt; AttributeArgKind::Implementation,
             <span class="self">Self</span>::HandleStatus(<span class="kw">_</span>) =&gt; AttributeArgKind::HandleStatus,
@@ -2016,8 +2079,11 @@
             <span class="self">Self</span>::Constructor =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;constructor&quot;</span>),
             <span class="self">Self</span>::Payable =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;payable&quot;</span>),
             <span class="self">Self</span>::Selector(selector) =&gt; core::fmt::Display::fmt(<span class="kw-2">&amp;</span>selector, f),
-            <span class="self">Self</span>::Extension(extension) =&gt; {
-                <span class="macro">write!</span>(f, <span class="string">&quot;extension = {:?}&quot;</span>, extension.into_u32())
+            <span class="self">Self</span>::SignatureTopic(hash) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;signature_topic = {:?}&quot;</span>, hash)
+            }
+            <span class="self">Self</span>::Function(function) =&gt; {
+                <span class="macro">write!</span>(f, <span class="string">&quot;function = {:?}&quot;</span>, function.into_u16())
             }
             <span class="self">Self</span>::Namespace(namespace) =&gt; {
                 <span class="macro">write!</span>(f, <span class="string">&quot;namespace = {:?}&quot;</span>, namespace.as_bytes())
@@ -2289,7 +2355,7 @@
 {
     <span class="kw">let </span>(ink_attrs, rust_attrs) = ir::partition_attributes(attrs)<span class="question-mark">?</span>;
     <span class="kw">if </span>ink_attrs.is_empty() {
-        <span class="kw">return </span><span class="prelude-val">Ok</span>((<span class="prelude-val">None</span>, rust_attrs))
+        <span class="kw">return </span><span class="prelude-val">Ok</span>((<span class="prelude-val">None</span>, rust_attrs));
     }
     <span class="kw">let </span>normalized = ir::InkAttribute::from_expanded(ink_attrs).map_err(|err| {
         err.into_combine(<span class="macro">format_err!</span>(parent_span, <span class="string">&quot;at this invocation&quot;</span>,))
@@ -2318,7 +2384,7 @@
                     attr.span(),
                     <span class="string">&quot;encountered duplicate ink! attribute&quot;
                 </span>)
-                .into_combine(<span class="macro">format_err!</span>(seen.span(), <span class="string">&quot;first ink! attribute here&quot;</span>)))
+                .into_combine(<span class="macro">format_err!</span>(seen.span(), <span class="string">&quot;first ink! attribute here&quot;</span>)));
             }
             seen.insert(attr);
         }
@@ -2331,7 +2397,7 @@
 
     <span class="kw">fn </span>try_from(attr: syn::Attribute) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
         <span class="kw">if </span>attr.path().is_ident(<span class="string">&quot;ink&quot;</span>) {
-            <span class="kw">return </span>&lt;InkAttribute <span class="kw">as </span>TryFrom&lt;<span class="kw">_</span>&gt;&gt;::try_from(attr).map(Into::into)
+            <span class="kw">return </span>&lt;InkAttribute <span class="kw">as </span>TryFrom&lt;<span class="kw">_</span>&gt;&gt;::try_from(attr).map(Into::into);
         }
         <span class="prelude-val">Ok</span>(Attribute::Other(attr))
     }
@@ -2348,7 +2414,7 @@
 
     <span class="kw">fn </span>try_from(attr: syn::Attribute) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
         <span class="kw">if </span>!attr.path().is_ident(<span class="string">&quot;ink&quot;</span>) {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(attr, <span class="string">&quot;unexpected non-ink! attribute&quot;</span>))
+            <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(attr, <span class="string">&quot;unexpected non-ink! attribute&quot;</span>));
         }
 
         <span class="kw">let </span>args: Vec&lt;<span class="kw">_</span>&gt; = attr
@@ -2361,7 +2427,7 @@
             <span class="kw">return </span><span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(
                 attr,
                 <span class="string">&quot;encountered unsupported empty ink! attribute&quot;
-            </span>))
+            </span>));
         }
         <span class="prelude-val">Ok</span>(InkAttribute { args })
     }
@@ -2409,7 +2475,7 @@
             }
         }
         <span class="kw">if let </span><span class="prelude-val">Some</span>(err) = err {
-            <span class="kw">return </span><span class="prelude-val">Err</span>(err)
+            <span class="kw">return </span><span class="prelude-val">Err</span>(err);
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -2436,19 +2502,29 @@
                         Namespace::try_from(<span class="kw-2">&amp;</span>name_value.value)
                             .map(AttributeArg::Namespace)
                     }
-                    <span class="string">&quot;extension&quot; </span>=&gt; {
-                        <span class="kw">if let </span><span class="prelude-val">Some</span>(lit_int) = name_value.value.as_lit_int() {
-                            <span class="kw">let </span>id = lit_int.base10_parse::&lt;u32&gt;()
-                                .map_err(|error| {
-                                    <span class="macro">format_err_spanned!</span>(
-                                        lit_int,
-                                        <span class="string">&quot;could not parse `N` in `#[ink(extension = N)]` into a `u32` integer: {}&quot;</span>, error)
-                                })<span class="question-mark">?</span>;
-                            <span class="prelude-val">Ok</span>(AttributeArg::Extension(ExtensionId::from_u32(id)))
+                    <span class="string">&quot;signature_topic&quot; </span>=&gt; {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(hash) = name_value.value.as_string() {
+                            <span class="prelude-val">Ok</span>(AttributeArg::SignatureTopic(hash))
                         } <span class="kw">else </span>{
                             <span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(
                                 name_value.value,
-                                <span class="string">&quot;expected `u32` integer type for `N` in #[ink(extension = N)]&quot;</span>,
+                                <span class="string">&quot;expected String type for `S` in #[ink(signature_topic = S)]&quot;</span>,
+                            ))
+                        }
+                    }
+                    <span class="string">&quot;function&quot; </span>=&gt; {
+                        <span class="kw">if let </span><span class="prelude-val">Some</span>(lit_int) = name_value.value.as_lit_int() {
+                            <span class="kw">let </span>id = lit_int.base10_parse::&lt;u16&gt;()
+                                .map_err(|error| {
+                                    <span class="macro">format_err_spanned!</span>(
+                                        lit_int,
+                                        <span class="string">&quot;could not parse `N` in `#[ink(function = N)]` into a `u16` integer: {}&quot;</span>, error)
+                                })<span class="question-mark">?</span>;
+                            <span class="prelude-val">Ok</span>(AttributeArg::Function(FunctionId::from_u16(id)))
+                        } <span class="kw">else </span>{
+                            <span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(
+                                name_value.value,
+                                <span class="string">&quot;expected `u16` integer type for `N` in #[ink(function = N)]&quot;</span>,
                             ))
                         }
                     }
@@ -2488,10 +2564,10 @@
                     <span class="string">&quot;default&quot; </span>=&gt; <span class="prelude-val">Ok</span>(AttributeArg::Default),
                     <span class="string">&quot;impl&quot; </span>=&gt; <span class="prelude-val">Ok</span>(AttributeArg::Implementation),
                     <span class="kw">_ </span>=&gt; <span class="kw">match </span>ident.to_string().as_str() {
-                        <span class="string">&quot;extension&quot; </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(
+                        <span class="string">&quot;function&quot; </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(
                             path,
-                            <span class="string">&quot;encountered #[ink(extension)] that is missing its `id` parameter. \
-                            Did you mean #[ink(extension = id: u32)] ?&quot;
+                            <span class="string">&quot;encountered #[ink(function)] that is missing its `id` parameter. \
+                            Did you mean #[ink(function = id: u16)] ?&quot;
                         </span>)),
                         <span class="string">&quot;handle_status&quot; </span>=&gt; <span class="prelude-val">Err</span>(<span class="macro">format_err_spanned!</span>(
                             path,
@@ -2803,10 +2879,10 @@
     </span><span class="kw">fn </span>extension_works() {
         assert_attribute_try_from(
             <span class="macro">syn::parse_quote! </span>{
-                <span class="attr">#[ink(extension = <span class="number">42</span>)]
+                <span class="attr">#[ink(function = <span class="number">42</span>)]
             </span>},
-            <span class="prelude-val">Ok</span>(test::Attribute::Ink(<span class="macro">vec!</span>[AttributeArg::Extension(
-                ExtensionId::from_u32(<span class="number">42</span>),
+            <span class="prelude-val">Ok</span>(test::Attribute::Ink(<span class="macro">vec!</span>[AttributeArg::Function(
+                FunctionId::from_u16(<span class="number">42</span>),
             )])),
         );
     }
@@ -2815,9 +2891,9 @@
     </span><span class="kw">fn </span>extension_invalid_value_type() {
         assert_attribute_try_from(
             <span class="macro">syn::parse_quote! </span>{
-                <span class="attr">#[ink(extension = <span class="string">&quot;string&quot;</span>)]
+                <span class="attr">#[ink(function = <span class="string">&quot;string&quot;</span>)]
             </span>},
-            <span class="prelude-val">Err</span>(<span class="string">&quot;expected `u32` integer type for `N` in #[ink(extension = N)]&quot;</span>),
+            <span class="prelude-val">Err</span>(<span class="string">&quot;expected `u16` integer type for `N` in #[ink(function = N)]&quot;</span>),
         );
     }
 
@@ -2825,9 +2901,9 @@
     </span><span class="kw">fn </span>extension_negative_integer() {
         assert_attribute_try_from(
             <span class="macro">syn::parse_quote! </span>{
-                <span class="attr">#[ink(extension = -<span class="number">1</span>)]
+                <span class="attr">#[ink(function = -<span class="number">1</span>)]
             </span>},
-            <span class="prelude-val">Err</span>(<span class="string">&quot;could not parse `N` in `#[ink(extension = N)]` into a `u32` integer: invalid digit found in string&quot;</span>)
+            <span class="prelude-val">Err</span>(<span class="string">&quot;could not parse `N` in `#[ink(function = N)]` into a `u16` integer: invalid digit found in string&quot;</span>)
         );
     }
 
@@ -2836,9 +2912,9 @@
         <span class="kw">let </span>max_u32_plus_1 = (u32::MAX <span class="kw">as </span>u64) + <span class="number">1</span>;
         assert_attribute_try_from(
             <span class="macro">syn::parse_quote! </span>{
-                <span class="attr">#[ink(extension = #max_u32_plus_1)]
+                <span class="attr">#[ink(function = #max_u32_plus_1)]
             </span>},
-            <span class="prelude-val">Err</span>(<span class="string">&quot;could not parse `N` in `#[ink(extension = N)]` into a `u32` integer: number too large to fit in target type&quot;</span>),
+            <span class="prelude-val">Err</span>(<span class="string">&quot;could not parse `N` in `#[ink(function = N)]` into a `u16` integer: number too large to fit in target type&quot;</span>),
         );
     }
 
@@ -2846,11 +2922,11 @@
     </span><span class="kw">fn </span>extension_missing_parameter() {
         assert_attribute_try_from(
             <span class="macro">syn::parse_quote! </span>{
-                <span class="attr">#[ink(extension)]
+                <span class="attr">#[ink(function)]
             </span>},
             <span class="prelude-val">Err</span>(
-                <span class="string">&quot;encountered #[ink(extension)] that is missing its `id` parameter. \
-                Did you mean #[ink(extension = id: u32)] ?&quot;</span>,
+                <span class="string">&quot;encountered #[ink(function)] that is missing its `id` parameter. \
+                Did you mean #[ink(function = id: u16)] ?&quot;</span>,
             ),
         );
     }
@@ -3018,6 +3094,16 @@
             ],
             <span class="prelude-val">Err</span>(<span class="string">&quot;encountered duplicate ink! attribute&quot;</span>),
         )
+    }
+    <span class="attr">#[test]
+    </span><span class="kw">fn </span>signature_topic_works() {
+        <span class="kw">let </span>s = <span class="string">&quot;11&quot;</span>.repeat(<span class="number">32</span>);
+        assert_attribute_try_from(
+            <span class="macro">syn::parse_quote! </span>{
+                <span class="attr">#[ink(signature_topic = #s)]
+            </span>},
+            <span class="prelude-val">Ok</span>(test::Attribute::Ink(<span class="macro">vec!</span>[AttributeArg::SignatureTopic(s)])),
+        );
     }
 }
 </code></pre></div></section></main></body></html>
