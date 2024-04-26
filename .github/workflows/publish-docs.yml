@@ -19,7 +19,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 100
-          token: ${{ secrets.GH_PAGES }}
+          ssh-key: ${{ secrets.GH_PAGES_DEPLOY }}
+          
 
       # - name: Download Contract Sizes
       #   uses: ./.github/download-artifact
