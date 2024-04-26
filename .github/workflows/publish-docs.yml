@@ -9,13 +9,10 @@ on:
       - continuous-integration
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   publish-docs:
-    if: >
-      github.event.workflow_run.event == 'push' &&
-        github.event.workflow_run.head_branch == 'master' &&
-        github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -24,30 +21,45 @@ jobs:
           fetch-depth: 100
           token: ${{ secrets.GH_PAGES }}
 
-      - name: Download Contract Sizes
-        uses: ./.github/download-artifact
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ARTIFACT_NAME: docs-data
-          DOWNLOAD_DIR: crate-docs
+      # - name: Download Contract Sizes
+      #   uses: ./.github/download-artifact
+      #   with:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     ARTIFACT_NAME: docs-data
+      #     DOWNLOAD_DIR: crate-docs
+
+      - name: Add key to allow access to repository
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          echo "${{ secrets.GH_PAGES_DEPLOY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          cat <<EOT >> ~/.ssh/config
+          Host github.com
+          HostName github.com
+          IdentityFile ~/.ssh/id_rsa
+          EOT
 
       - name: Push docs
         run: |
           # Set git config
-          git config user.email "paritytech-ci@parity.io"
-          git config user.name "paritytech-ci"
+          git config user.email "actions@github.com"
+          git config user.name "actions"
           git fetch origin gh-pages
           # saving README and docs
-          cp -r ./crate-docs/ /tmp/doc/
-          cp ./README.md /tmp/doc/
-          cp -r ./.images/ /tmp/doc/
+          # cp -r ./crate-docs/ /tmp/doc/
+          # cp ./README.md /tmp/doc/
+          # cp -r ./.images/ /tmp/doc/
           git checkout gh-pages
-          mv _config.yml /tmp/doc/
+          # mv _config.yml /tmp/doc/
           # remove everything and restore generated docs, README and Jekyll config
-          rm -rf ./*
-          rm -rf ./.images
-          mv /tmp/doc/* .
-          mv /tmp/doc/.images .
+          # rm -rf ./*
+          # rm -rf ./.images
+          # mv /tmp/doc/* .
+          # mv /tmp/doc/.images .
+          echo "test" >> README.md
           # Upload files
           git add --all --force
           git status
